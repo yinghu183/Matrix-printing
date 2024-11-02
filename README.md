@@ -4,6 +4,7 @@
 <p align="center">
   <img src="images/2024-11-02_131037.jpg" alt="First Image" width="600" style="margin-right: 200px;"/>
 </p>
+
 # 功能
 ## 格子纸上排版打印
 <p align="center">
