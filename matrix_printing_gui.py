@@ -102,7 +102,7 @@ class MatrixPrintingGUI:
         
         # 3. 上传按钮
         ttk.Button(self.left_frame, text="上传格子图片", command=self.load_image).pack(pady=5)
-        ttk.Button(self.left_frame, text="选择字体文件", command=self.load_font).pack(pady=5)
+        ttk.Button(self.left_frame, text="上传字体文件", command=self.load_font).pack(pady=5)
         
         # 4. 详细参数调整
         params_frame = ttk.LabelFrame(self.left_frame, text="参数调整", padding="5")
@@ -126,10 +126,10 @@ class MatrixPrintingGUI:
             ("起始Y坐标:", self.start_y),
             ("格子宽度:", self.cell_width),
             ("格子高度:", self.cell_height),
+            ("线条粗细:", self.grid_line_thickness),  # 移动到字体大小之前
             ("字体大小:", self.font_size),
             ("X轴偏移:", self.offset_x),
             ("Y轴偏移:", self.offset_y),
-            ("线条粗细:", self.grid_line_thickness),  # 添加到参数列表
         ]
         
         for label, var in params:
