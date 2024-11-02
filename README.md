@@ -2,7 +2,7 @@
 为了娃娃写作文省点时间
 # 界面
 <p align="center">
-  <img src="images/2024-11-02_131037.jpg" alt="First Image" width="300" style="margin-right: 200px;"/>
+  <img src="images/2024-11-02_131037.jpg" alt="First Image" width="600" style="margin-right: 200px;"/>
 </p>
 # 功能
 ## 格子纸上排版打印
