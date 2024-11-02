@@ -1,6 +1,7 @@
 # 缘起
 为了娃娃写作文省点时间
 # 功能
+## 格子纸上排版打印
 <p align="center">
   <img src="images/z.png" alt="First Image" width="300" style="margin-right: 200px;"/>
   &nbsp;&nbsp;&nbsp;
