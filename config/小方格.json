@@ -1,0 +1,12 @@
+{
+    "start_x": "0.0",
+    "start_y": "0.0",
+    "cell_width": "26.0",
+    "cell_height": "26.0",
+    "font_size": "15",
+    "offset_x": "1",
+    "offset_y": "-1",
+    "grid_columns": "21",
+    "grid_rows": "29",
+    "grid_line_thickness": "2.5"
+}
