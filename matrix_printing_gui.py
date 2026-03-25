@@ -7,6 +7,8 @@ import os
 import shutil
 from datetime import datetime
 
+from matrix_printing_logic import calculate_grid_metrics, split_text_paragraphs
+
 class MatrixPrintingGUI:
     def __init__(self, root):
         self.root = root
@@ -234,7 +236,7 @@ class MatrixPrintingGUI:
             self.update_preview()
     
     def load_font(self):
-        """上传并制字体到 fonts 文件夹"""
+        """上传并复制字体到 fonts 文件夹"""
         font_path = filedialog.askopenfilename(
             filetypes=[("Font files", "*.ttf *.otf")]
         )
@@ -299,7 +301,7 @@ class MatrixPrintingGUI:
     
     def load_settings(self):
         try:
-            # 弹出对话框让用户选择配置件
+            # 弹出对话框让用户选择配置文件
             filename = filedialog.askopenfilename(
                 initialdir=self.folders['config'],
                 title="加载参数配置",
@@ -326,7 +328,7 @@ class MatrixPrintingGUI:
             messagebox.showerror("错误", f"加载配置失败: {str(e)}")
     
     def generate_image(self):
-        """修改生成图片的方法，移除尺寸选择对话框"""
+        """生成并保存当前图片。"""
         if not self.image:
             messagebox.showerror("错误", "请先上传图片")
             return
@@ -381,8 +383,8 @@ class MatrixPrintingGUI:
                 raise Exception("字体加载失败")
             
             # 获取文本并分段
-            text = self.text_input.get("1.0", tk.END).strip()
-            paragraphs = text.split('\n\n')  # 通过双换行符分割段落
+            text = self.text_input.get("1.0", tk.END)
+            paragraphs = split_text_paragraphs(text)
             
             # 绘制文本
             current_x, current_y = start_x, start_y
@@ -408,7 +410,7 @@ class MatrixPrintingGUI:
                     line_char_count = 2
                 
                 # 绘制段落中的每个字符
-                for char in para.strip():
+                for char in para:
                     if line_char_count >= grid_width:
                         current_x = start_x
                         current_y += actual_cell_height
@@ -475,17 +477,19 @@ class MatrixPrintingGUI:
         except ValueError:
             messagebox.showerror("错误", "请先输入有效行数和列数")
             return
-        
-        # Calculate cell dimensions
-        cell_width = img_width // columns
-        cell_height = img_height // rows
-        
+
+        try:
+            metrics = calculate_grid_metrics((img_width, img_height), columns, rows)
+        except ValueError as error:
+            messagebox.showerror("错误", str(error))
+            return
+
         # Set calculated parameters
-        self.start_x.set("0")
-        self.start_y.set("0")
-        self.cell_width.set(str(cell_width))
-        self.cell_height.set(str(cell_height))
-        self.font_size.set(str(min(cell_width, cell_height) - 4))  # Slightly smaller than cell size
+        self.start_x.set(metrics["start_x"])
+        self.start_y.set(metrics["start_y"])
+        self.cell_width.set(metrics["cell_width"])
+        self.cell_height.set(metrics["cell_height"])
+        self.font_size.set(metrics["font_size"])
         
         messagebox.showinfo("成功", "参数已更新")
         self.update_preview()
@@ -547,7 +551,7 @@ class MatrixPrintingGUI:
                              fill="red", width=round(line_thickness))
                 
                 # 如果有文本且有选择字体，绘制文本
-                text = self.text_input.get("1.0", tk.END).strip()
+                text = self.text_input.get("1.0", tk.END)
                 if text and self.selected_font.get():
                     try:
                         font_path = os.path.join(self.folders['fonts'], self.selected_font.get())
@@ -556,7 +560,7 @@ class MatrixPrintingGUI:
                         current_x, current_y = start_x, start_y
                         line_char_count = 0
                         
-                        paragraphs = text.split('\n\n')
+                        paragraphs = split_text_paragraphs(text)
                         
                         for i, para in enumerate(paragraphs):
                             # 处理首行换行
@@ -577,7 +581,7 @@ class MatrixPrintingGUI:
                                 current_x += actual_cell_width * 2
                                 line_char_count = 2
                             
-                            for char in para.strip():
+                            for char in para:
                                 if line_char_count >= columns:
                                     current_x = start_x
                                     current_y += actual_cell_height
